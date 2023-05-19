@@ -11,11 +11,58 @@ import {
     Text,
     useColorModeValue,
     HStack,
+    useToast,
 } from '@chakra-ui/react';
-import React from 'react'
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../../Context';
 
 function LoginComponent() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+    const toast = useToast();
+    const { user, setUser } = useContext(UserContext);
+
+    const handleLogin = () => {
+        let payload = {
+            email,
+            password
+        }
+
+        fetch('http://localhost:8000/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', },
+            body: JSON.stringify(payload)
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(res => {
+                console.log(res)
+                if (res.status === 200) {
+                    localStorage.setItem("user", JSON.stringify(res.user));
+                    localStorage.setItem("welcome", "welcome");
+                    localStorage.setItem("token", JSON.stringify(res.token));
+                    setUser(res.user);
+                    navigate('/dashboard');
+                } else {
+                    toast({
+                        title: 'Login Failed.',
+                        description: `${res.message}`,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    })
+                }
+
+            })
+            .catch(error => {
+                console.log('error', error.message)
+                toast(error.message);
+            });
+
+    }
     return (
         <div>
             <Flex
@@ -40,11 +87,25 @@ function LoginComponent() {
                         <Stack spacing={4}>
                             <FormControl id="email">
                                 <FormLabel>Email address</FormLabel>
-                                <Input type="email" />
+                                <Input
+                                    type="email"
+                                    name="email"
+                                    value={email}
+                                    onChange={({ target }) => {
+                                        setEmail(target.value)
+                                    }}
+                                />
                             </FormControl>
                             <FormControl id="password">
                                 <FormLabel>Password</FormLabel>
-                                <Input type="password" />
+                                <Input
+                                    type="password"
+                                    name="password"
+                                    value={password}
+                                    onChange={({ target }) => {
+                                        setPassword(target.value)
+                                    }}
+                                />
                             </FormControl>
                             <Stack spacing={10}>
                                 <Stack
@@ -54,16 +115,18 @@ function LoginComponent() {
                                     <Checkbox>Remember me</Checkbox>
                                     <Link to="#" color={'green.400'}>Forgot password?</Link>
                                 </Stack>
-                                <Link to="/dashboard">
+                                {/* <Link to="/dashboard"> */}
                                     <Button
                                         bg={'green.400'}
                                         color={'white'}
                                         _hover={{
                                             bg: 'green.500',
-                                        }}>
+                                    }}
+                                    onClick={handleLogin}
+                                    >
                                         Sign in
                                     </Button>
-                                </Link>
+                                {/* </Link> */}
                                 <Stack pt={4}>
                                     <Text align={'center'}>
                                         Don't have an account? <Link to="/register" color={'green.400'}>Register</Link>

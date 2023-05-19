@@ -12,14 +12,69 @@ import {
     Heading,
     Text,
     useColorModeValue,
+    useToast,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+// import { ToastContainer, toast } from 'react-toastify';
 
 function RegisterComponent() {
     const [showPassword, setShowPassword] = useState(false);
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("")
+    const navigate = useNavigate();
+    const toast = useToast();
+
+    const handleRegister = () => {
+        let payload = {
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            password
+        }
+
+        fetch('http://localhost:8000/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', },
+            body: JSON.stringify(payload)
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(res => {
+                // console.log(res)
+                if (res.status === 200) {
+                    toast({
+                        title: 'Account created.',
+                        description: "Registration Successfully, Pls Login",
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    })
+                    setTimeout(() => {
+                        navigate('/login');
+                    }, 5000)
+                } else {
+                    toast({
+                        title: 'Registration Failed.',
+                        description: `${res.message}`,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    })
+                }
+
+            })
+            .catch(error => {
+                console.log('error', error.message)
+                toast(error.message);
+            });
+    }
+
     return (
         <div>
             <Flex
@@ -46,24 +101,52 @@ function RegisterComponent() {
                                 <Box>
                                     <FormControl id="firstName" isRequired>
                                         <FormLabel>First Name</FormLabel>
-                                        <Input type="text" />
+                                        <Input
+                                            type="text"
+                                            name="firstName"
+                                            value={firstName}
+                                            onChange={({ target }) => {
+                                                setFirstName(target.value)
+                                            }}
+                                        />
                                     </FormControl>
                                 </Box>
                                 <Box>
                                     <FormControl id="lastName">
                                         <FormLabel>Last Name</FormLabel>
-                                        <Input type="text" />
+                                        <Input
+                                            type="text"
+                                            name="lastName"
+                                            value={lastName}
+                                            onChange={({ target }) => {
+                                                setLastName(target.value)
+                                            }}
+                                        />
                                     </FormControl>
                                 </Box>
                             </HStack>
                             <FormControl id="email" isRequired>
                                 <FormLabel>Email address</FormLabel>
-                                <Input type="email" />
+                                <Input
+                                    type="email"
+                                    name="email"
+                                    value={email}
+                                    onChange={({ target }) => {
+                                        setEmail(target.value)
+                                    }}
+                                />
                             </FormControl>
                             <FormControl id="password" isRequired>
                                 <FormLabel>Password</FormLabel>
                                 <InputGroup>
-                                    <Input type={showPassword ? 'text' : 'password'} />
+                                    <Input
+                                        type={showPassword ? 'text' : 'password'}
+                                        name="password"
+                                        value={password}
+                                        onChange={({ target }) => {
+                                            setPassword(target.value)
+                                        }}
+                                    />
                                     <InputRightElement h={'full'}>
                                         <Button
                                             variant={'ghost'}
@@ -76,7 +159,7 @@ function RegisterComponent() {
                                 </InputGroup>
                             </FormControl>
                             <Stack spacing={10} pt={2}>
-                                <Link to="/dashboard">
+                                {/* <Link to="/dashboard"> */}
                                     <Button
                                         loadingText="Submitting"
                                         size="lg"
@@ -84,10 +167,12 @@ function RegisterComponent() {
                                         color={'white'}
                                         _hover={{
                                             bg: 'green.500',
-                                        }}>
+                                        }}
+                                        onClick={handleRegister}
+                                    >
                                         Sign up
                                     </Button>
-                                </Link>
+                                {/* </Link> */}
                             </Stack>
                             <Stack pt={6}>
                                 <Text align={'center'}>

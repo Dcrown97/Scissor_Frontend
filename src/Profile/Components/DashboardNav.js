@@ -1,10 +1,26 @@
 import { Box, Button, Container, Flex, HStack, IconButton, Image, Stack, Text, useDisclosure } from '@chakra-ui/react'
 import { IoClose, IoMenu } from 'react-icons/io5';
-import React from 'react'
-import { Link } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../../Context';
 
 function DashboardNav() {
     const { isOpen, onToggle } = useDisclosure();
+    const { user, setUser } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const savedUser = JSON.parse(localStorage.getItem("user"));
+        setUser(savedUser);
+    }, [])
+
+    const handleLogout = () => {
+        setUser({})
+        localStorage.removeItem("user");
+        localStorage.removeItem("welcome");
+        localStorage.removeItem("token");
+        navigate("/")
+    }
     return (
         <Box background={"green.400"} w={'100%'} p={4} color='white'>
             <Container maxW="container.lg">
@@ -83,26 +99,25 @@ function DashboardNav() {
                         </Link>
                     </HStack>
                     <HStack display={{ base: 'none', md: 'flex' }}>
-                        <Link to="/">
-                            <Button
-                                background="#FFFFFF;"
-                                color="black"
-                                fontWeight="700"
-                                fontSize="12px"
-                                fontFamily="GT Walsheim Pro"
-                                d={{ base: 'none', md: 'flex' }}
-                                w="108px"
-                                h="48px"
-                                border="none"
-                                rounded="8px"
-                                _hover={{
-                                    color: 'green.100',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                Logout
-                            </Button>
-                        </Link>
+                        <Button
+                            background="#FFFFFF;"
+                            color="black"
+                            fontWeight="700"
+                            fontSize="12px"
+                            fontFamily="GT Walsheim Pro"
+                            d={{ base: 'none', md: 'flex' }}
+                            w="108px"
+                            h="48px"
+                            border="none"
+                            rounded="8px"
+                            _hover={{
+                                color: 'green.100',
+                                cursor: 'pointer'
+                            }}
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </Button>
                     </HStack>
 
                     <IconButton
@@ -170,23 +185,22 @@ function DashboardNav() {
                                     Link History
                                 </Text>
                             </Link>
-                            <Link to="/">
-                                <Button
-                                    color="green.400"
-                                    fontWeight="700"
-                                    fontSize="12px"
-                                    w="108px"
-                                    h="48px"
-                                    border="none"
-                                    rounded="8px"
-                                    _hover={{
-                                        color: 'green.100',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    Logout
-                                </Button>
-                            </Link>
+                            <Button
+                                color="green.400"
+                                fontWeight="700"
+                                fontSize="12px"
+                                w="108px"
+                                h="48px"
+                                border="none"
+                                rounded="8px"
+                                _hover={{
+                                    color: 'green.100',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={handleLogout}
+                            >
+                                Logout
+                            </Button>
                         </Stack>
                     </Box>
                 )}
