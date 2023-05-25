@@ -43,7 +43,7 @@ function CustomUrl() {
         }
         const token = JSON.parse(localStorage.getItem("token"));
 
-        fetch('http://localhost:8000/api/custom', {
+        fetch(`${process.env.REACT_API_URL}/api/custom`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,

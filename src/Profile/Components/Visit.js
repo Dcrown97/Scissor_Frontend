@@ -11,7 +11,7 @@ function Visit() {
     useEffect(() => {
         const token = JSON.parse(localStorage.getItem("token"));
 
-        fetch(`http://localhost:8000/api/visit/${id}`, {
+        fetch(`${ process.env.REACT_API_URL }/api/visit/${id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,

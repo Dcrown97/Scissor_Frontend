@@ -11,7 +11,7 @@ function History() {
     useEffect(() => {
         const token = JSON.parse(localStorage.getItem("token"));
 
-        fetch('http://localhost:8000/api/analytics', {
+        fetch(`${process.env.REACT_API_URL}/api/analytics`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,

@@ -43,7 +43,7 @@ function Home() {
         
         const token = JSON.parse(localStorage.getItem("token"));
 
-        fetch('http://localhost:8000/api/short', {
+        fetch(`${process.env.REACT_API_URL}/api/short`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
