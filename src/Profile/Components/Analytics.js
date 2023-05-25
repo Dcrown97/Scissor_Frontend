@@ -9,7 +9,7 @@ function Analytics() {
     useEffect(() => {
         const token = JSON.parse(localStorage.getItem("token"));
 
-        fetch(`${process.env.REACT_API_URL}/api/analytics`, {
+        fetch(`${process.env.REACT_APP_API_URL}/api/analytics`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
