@@ -19,6 +19,8 @@ function DashboardNav() {
         localStorage.removeItem("user");
         localStorage.removeItem("welcome");
         localStorage.removeItem("token");
+        localStorage.removeItem("visit");
+        localStorage.removeItem("url");
         navigate("/")
     }
     return (
@@ -34,7 +36,7 @@ function DashboardNav() {
                         }}
                         display={{ base: 'flex', md: 'none' }}
                     >
-                        <Link to="/">BRIEF</Link>
+                        <Link to="/dashboard">BRIEF</Link>
                     </Text>
                     <HStack display={{ base: 'none', md: 'flex' }}>
                         <Text
@@ -45,11 +47,11 @@ function DashboardNav() {
                                 color: 'green.100',
                             }}
                         >
-                            <Link to="/">BRIEF</Link>
+                            <Link to="/dashboard">BRIEF</Link>
                         </Text>
                     </HStack>
                     <HStack spacing="50px" display={{ base: 'none', md: 'flex' }}>
-                        <Link to='/custom_urls'>
+                        <Link to='/custom_url'>
                             <Text
                                 fontWeight="500"
                                 fontSize="15px"
@@ -59,18 +61,6 @@ function DashboardNav() {
                                 }}
                             >
                                 Custom URLs
-                            </Text>
-                        </Link>
-                        <Link to="/qr_code_generation">
-                            <Text
-                                fontWeight="500"
-                                fontSize="15px"
-                                color="white"
-                                _hover={{
-                                    color: 'green.100',
-                                }}
-                            >
-                                QR Code Generation
                             </Text>
                         </Link>
                         <Link to="/analytics">
@@ -137,7 +127,7 @@ function DashboardNav() {
                 {isOpen && (
                     <Box p="20px" bg="white" rounded="md" mb="50px" shadow="md">
                         <Stack spacing="20px">
-                            <Link to='/custom_urls'>
+                            <Link to='/custom_url'>
                                 <Text
                                     fontWeight="500"
                                     fontSize="15px"
@@ -147,18 +137,6 @@ function DashboardNav() {
                                     }}
                                 >
                                     Custom URLs
-                                </Text>
-                            </Link>
-                            <Link to="/qr_code_generation">
-                                <Text
-                                    fontWeight="500"
-                                    fontSize="15px"
-                                    color="green.400"
-                                    _hover={{
-                                        color: 'green.100',
-                                    }}
-                                >
-                                    QR Code Generation
                                 </Text>
                             </Link>
                             <Link to="/analytics">

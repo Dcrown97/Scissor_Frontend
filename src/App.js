@@ -6,12 +6,17 @@ import {
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { Logo } from './Logo';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+// import "./index.css";
 import Login from './Auth/Login';
 import Register from './Auth/Register';
 import HomePage from './LandingPage/Homepage';
 import Theme from './LandingPage/Components/Theme';
 import Dashboard from './Profile/Dashboard';
 import { UserContext } from './Context';
+import CustomUrlPage from './Profile/CustomUrlPage';
+import AnalyticsPage from './Profile/AnalyticsPage';
+import VisitPage from './Profile/VisitPage';
+import UrlHistory from './Profile/UrlHistory';
 
 function App() {
   const [user, setUser] = useState(0);
@@ -25,6 +30,10 @@ function App() {
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
             <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/custom_url' element={<CustomUrlPage />} />
+            <Route path='/analytics' element={<AnalyticsPage />} />
+            <Route path='/visit/:id' element={<VisitPage />} />
+            <Route path='/link_history' element={<UrlHistory />} />
           </Routes>
         </BrowserRouter>
       </ChakraProvider>

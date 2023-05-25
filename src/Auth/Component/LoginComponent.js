@@ -39,7 +39,7 @@ function LoginComponent() {
                 return response.json();
             })
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 if (res.status === 200) {
                     localStorage.setItem("user", JSON.stringify(res.user));
                     localStorage.setItem("welcome", "welcome");
@@ -58,7 +58,7 @@ function LoginComponent() {
 
             })
             .catch(error => {
-                console.log('error', error.message)
+                // console.log('error', error.message)
                 toast(error.message);
             });
 

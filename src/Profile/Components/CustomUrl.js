@@ -25,8 +25,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../Context';
 import { CopyIcon } from '@chakra-ui/icons';
 
-function Home() {
+function CustomUrl() {
     const [url, setUrl] = useState("")
+    const [customUrl, setCustomUrl] = useState("")
     const [ShorteenedUrl, setShorteenedUrl] = useState("")
     const [copySuccess, setCopySuccess] = useState('');
     const { user, setUser } = useContext(UserContext);
@@ -34,16 +35,15 @@ function Home() {
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-
     const handleSubmit = () => {
-        let domainWithoutCom = url.replace(".com", "");
+        let domainWithoutCom = customUrl.replace(".com", "");
         let payload = {
-            origUrl: domainWithoutCom,
+            origUrl: url,
+            customUrl: domainWithoutCom
         }
-        
         const token = JSON.parse(localStorage.getItem("token"));
 
-        fetch('http://localhost:8000/api/short', {
+        fetch('http://localhost:8000/api/custom', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -57,8 +57,8 @@ function Home() {
             .then(res => {
                 // console.log(res, "res")
                 if (res.status === 200) {
-                    localStorage.setItem("url", JSON.stringify(res.url));
-                    setShorteenedUrl(res.url);
+                    localStorage.setItem("url", JSON.stringify(res.newUrl));
+                    setShorteenedUrl(res.newUrl);
                     // navigate('/dashboard');
                     onOpen();
                     toast({
@@ -113,7 +113,7 @@ function Home() {
                 window.URL.revokeObjectURL(url);
             });
     }
-    
+
     return (
         <Container maxW={'5xl'}>
             <Stack
@@ -125,14 +125,13 @@ function Home() {
                     fontWeight={600}
                     fontSize={{ base: '3xl', sm: '4xl', md: '4xl' }}
                     lineHeight={'110%'}>
-                    Enter your URL in the input below
+                    Create Custom URL Name
                     {/* <Text as={'span'} color={'orange.400'}>
                         made easy
                     </Text> */}
                 </Heading>
                 <Text color={'gray.500'} maxW={'3xl'}>
-                    Brief help make everything short as possible. <br />
-                    Brief is a simple tool which makes URLs as short as possible.
+                    Create a custom url in minutes with any name of your choice on brief
                 </Text>
                 <Stack spacing={6} direction={'row'}>
                     <FormControl id="url">
@@ -146,6 +145,17 @@ function Home() {
                             }}
                         />
                         <FormHelperText>Note: The URL must carry http</FormHelperText>
+                    </FormControl>
+                    <FormControl id="url">
+                        <Input
+                            type="text"
+                            name="customUrl"
+                            value={customUrl}
+                            placeholder='Enter Custom Name Here'
+                            onChange={({ target }) => {
+                                setCustomUrl(target.value)
+                            }}
+                        />
                     </FormControl>
                     <Button
                         rounded={'full'}
@@ -168,7 +178,7 @@ function Home() {
                     <ModalBody textAlign="center" pb={6}>
                         <Text>
                             {ShorteenedUrl.shortUrl}
-                            <CopyIcon _hover={{ cursor: 'pointer' }} ml="10" onClick={handleCopyClick} />
+                            <CopyIcon _hover={{cursor: 'pointer'}} ml="10" onClick={handleCopyClick} />
                         </Text>
                         <Center>
                             <Image
@@ -189,4 +199,5 @@ function Home() {
         </Container>
     )
 }
-export default Home
+
+export default CustomUrl

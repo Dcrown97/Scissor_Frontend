@@ -6,3 +6,12 @@
 body {
     margin: 0;
 }
+
+.text-container {
+    background-color: red;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: hidden;
+  word-wrap: break-word;
+}
