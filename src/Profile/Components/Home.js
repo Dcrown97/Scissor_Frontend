@@ -36,9 +36,9 @@ function Home() {
 
 
     const handleSubmit = () => {
-        let domainWithoutCom = url.replace(".com", "");
+        // let domainWithoutCom = url.replace(".com", "");
         let payload = {
-            origUrl: domainWithoutCom,
+            origUrl: url,
         }
         
         const token = JSON.parse(localStorage.getItem("token"));
