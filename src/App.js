@@ -17,6 +17,7 @@ import CustomUrlPage from './Profile/CustomUrlPage';
 import AnalyticsPage from './Profile/AnalyticsPage';
 import VisitPage from './Profile/VisitPage';
 import UrlHistory from './Profile/UrlHistory';
+import PrivateRoutes from './PrivateRoutes ';
 
 function App() {
   const [user, setUser] = useState(0);
@@ -29,11 +30,13 @@ function App() {
             <Route path='/' element={<HomePage />} />
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/custom_url' element={<CustomUrlPage />} />
-            <Route path='/analytics' element={<AnalyticsPage />} />
-            <Route path='/visit/:id' element={<VisitPage />} />
-            <Route path='/link_history' element={<UrlHistory />} />
+            <Route element={<PrivateRoutes />}>
+              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/custom_url' element={<CustomUrlPage />} />
+              <Route path='/analytics' element={<AnalyticsPage />} />
+              <Route path='/visit/:id' element={<VisitPage />} />
+              <Route path='/link_history' element={<UrlHistory />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </ChakraProvider>

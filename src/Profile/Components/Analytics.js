@@ -22,6 +22,8 @@ function Analytics() {
             .then(res => {
                 if (res.status === 200) {
                     setData(res.url);
+                } else {
+                    // console.log('first', res.error)
                 }
             })
             .catch(error => {

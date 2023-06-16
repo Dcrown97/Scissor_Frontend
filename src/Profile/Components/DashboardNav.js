@@ -1,6 +1,6 @@
 import { Box, Button, Container, Flex, HStack, IconButton, Image, Stack, Text, useDisclosure } from '@chakra-ui/react'
 import { IoClose, IoMenu } from 'react-icons/io5';
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../Context';
 
@@ -9,20 +9,42 @@ function DashboardNav() {
     const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
 
+    const handleLogout = () => {
+        setUser({})
+        localStorage.clear();
+        navigate("/login")
+    }
+
     useEffect(() => {
         const savedUser = JSON.parse(localStorage.getItem("user"));
         setUser(savedUser);
+
+        const token = JSON.parse(localStorage.getItem("token"));
+        const user = JSON.parse(localStorage.getItem("user"));
+        const id = user._id
+
+        fetch(`${process.env.REACT_APP_API_URL}/api/user/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(res => {
+                if (res.status !== 200) {
+                    // console.log('error', res.error)
+                    handleLogout()
+                }
+            })
+            .catch(error => {
+                console.log(error, 'error')
+            });
+
     }, [])
 
-    const handleLogout = () => {
-        setUser({})
-        localStorage.removeItem("user");
-        localStorage.removeItem("welcome");
-        localStorage.removeItem("token");
-        localStorage.removeItem("visit");
-        localStorage.removeItem("url");
-        navigate("/")
-    }
     return (
         <Box background={"green.400"} w={'100%'} p={4} color='white'>
             <Container maxW="container.lg">
