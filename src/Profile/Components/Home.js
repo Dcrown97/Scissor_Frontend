@@ -96,7 +96,6 @@ function Home() {
     };
 
     const handleDownload = () => {
-        console.log("first")
         fetch(`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${ShorteenedUrl.shortUrl}`)
             .then(response => response.blob())
             .then(blob => {

@@ -1,5 +1,5 @@
 import { ViewIcon } from '@chakra-ui/icons'
-import { Box, Container, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from '@chakra-ui/react'
+import { Box, Container, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr, useToast } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 function History() {
 
     const [data, setData] = useState([])
+    const toast = useToast();
 
     useEffect(() => {
         const token = JSON.parse(localStorage.getItem("token"));
@@ -24,10 +25,19 @@ function History() {
             .then(res => {
                 if (res.status === 200) {
                     setData(res.url);
+                } else if (res.status === 429) {
+                    // console.log('history', res)
+                    toast({
+                        title: 'Failed.',
+                        description: `${res.error}`,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    })
                 }
             })
             .catch(error => {
-                console.log(error, 'error')
+                // console.log(error, 'error')
             });
     }, [])
 
