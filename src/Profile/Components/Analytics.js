@@ -1,5 +1,5 @@
 import { ViewIcon } from '@chakra-ui/icons'
-import { Box, Container, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr, useDisclosure, useToast } from '@chakra-ui/react'
+import { Box, Container, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr, useToast } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
