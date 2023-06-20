@@ -1,5 +1,5 @@
 import { CheckIcon, ExternalLinkIcon } from '@chakra-ui/icons'
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Container, Link, List, ListIcon, ListItem, Text } from '@chakra-ui/react'
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Container, Link, List, ListIcon, ListItem, Text, useToast } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 
@@ -7,6 +7,7 @@ function Visit() {
     const [visit, setVisit] = useState([])
     const [url, setUrl] = useState()
     const { id } = useParams();
+    const toast = useToast();
 
     useEffect(() => {
         const token = JSON.parse(localStorage.getItem("token"));
@@ -27,10 +28,19 @@ function Visit() {
                     localStorage.setItem("visit", JSON.stringify(res.data));
                     setVisit(res.data);
                     setUrl(res.urlDetail);
+                } else if (res.status === 429) {
+                    // console.log('analytics', res)
+                    toast({
+                        title: 'Failed.',
+                        description: `${res.error}`,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    })
                 }
             })
             .catch(error => {
-                console.log(error, 'error')
+                // console.log(error, 'error')
             });
     }, [])
 

@@ -68,6 +68,15 @@ function Home() {
                         duration: 5000,
                         isClosable: true,
                     })
+                } else if (res.status === 429) {
+                    // console.log('analytics', res)
+                    toast({
+                        title: 'Failed.',
+                        description: `${res.error}`,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    })
                 } else {
                     toast({
                         title: 'Failed.',
