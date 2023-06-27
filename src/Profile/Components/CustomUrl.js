@@ -20,6 +20,8 @@ import {
     Image,
     Center,
     FormHelperText,
+    Box,
+    Spinner,
 } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../Context';
@@ -34,8 +36,10 @@ function CustomUrl() {
     const navigate = useNavigate();
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = () => {
+        setIsLoading(true);
         let domainWithoutCom = customUrl.replace(".com", "");
         let payload = {
             origUrl: url,
@@ -57,6 +61,7 @@ function CustomUrl() {
             .then(res => {
                 // console.log(res, "res")
                 if (res.status === 200) {
+                    setIsLoading(false);
                     localStorage.setItem("url", JSON.stringify(res.newUrl));
                     setShorteenedUrl(res.newUrl);
                     // navigate('/dashboard');
@@ -69,6 +74,7 @@ function CustomUrl() {
                         isClosable: true,
                     })
                 } else if (res.status === 429) {
+                    setIsLoading(false);
                     // console.log('analytics', res)
                     toast({
                         title: 'Failed.',
@@ -78,6 +84,7 @@ function CustomUrl() {
                         isClosable: true,
                     })
                 } else {
+                    setIsLoading(false);
                     toast({
                         title: 'Failed.',
                         description: `${res.message}`,
@@ -89,6 +96,7 @@ function CustomUrl() {
 
             })
             .catch(error => {
+                setIsLoading(false);
                 toast(error.message);
             });
     }
@@ -105,6 +113,7 @@ function CustomUrl() {
     };
 
     const handleDownload = () => {
+        setIsLoading(true);
         fetch(`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${ShorteenedUrl.shortUrl}`)
             .then(response => response.blob())
             .then(blob => {
@@ -120,6 +129,7 @@ function CustomUrl() {
                 // Cleanup
                 window.URL.revokeObjectURL(url);
             });
+        setIsLoading(false);
     }
 
     return (
@@ -141,8 +151,9 @@ function CustomUrl() {
                 <Text color={'gray.500'} maxW={'3xl'}>
                     Create a custom url in minutes with any name of your choice on brief
                 </Text>
-                <Stack spacing={6} direction={'row'}>
-                    <FormControl id="url">
+                <Box spacing={4} display={{ base: 'grid', md: 'flex' }}>
+                    <FormControl id="url" mr="10px" mb="5" isRequired>
+                        <FormLabel>Main URL</FormLabel>
                         <Input
                             type="text"
                             name="url"
@@ -154,7 +165,8 @@ function CustomUrl() {
                         />
                         <FormHelperText>Note: The URL must carry http</FormHelperText>
                     </FormControl>
-                    <FormControl id="url">
+                    <FormControl id="url" mr="10px">
+                        <FormLabel>Custom URL</FormLabel>
                         <Input
                             type="text"
                             name="customUrl"
@@ -166,16 +178,18 @@ function CustomUrl() {
                         />
                     </FormControl>
                     <Button
+                        mt="30px"
                         rounded={'full'}
                         px={6}
                         colorScheme={'green'}
                         bg={'green.400'}
                         _hover={{ bg: 'green.500' }}
                         onClick={handleSubmit}
+                        disabled={isLoading}
                     >
-                        Submit
+                        {isLoading ? <Spinner size="sm" color="white" /> : 'Submit'}
                     </Button>
-                </Stack>
+                </Box>
             </Stack>
 
             <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
@@ -196,8 +210,13 @@ function CustomUrl() {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button onClick={handleDownload} colorScheme='blue' mr={3}>
-                            Download QR Code Link
+                        <Button
+                            onClick={handleDownload}
+                            colorScheme='blue'
+                            mr={3}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? <Spinner size="sm" color="white" /> : 'Download QR Code Link'}
                         </Button>
                         <Button onClick={onClose}>Cancel</Button>
                     </ModalFooter>

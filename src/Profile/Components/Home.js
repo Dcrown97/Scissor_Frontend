@@ -20,6 +20,8 @@ import {
     Image,
     Center,
     FormHelperText,
+    Box,
+    Spinner,
 } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../Context';
@@ -33,14 +35,15 @@ function Home() {
     const navigate = useNavigate();
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure()
-
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = () => {
+        setIsLoading(true);
         // let domainWithoutCom = url.replace(".com", "");
         let payload = {
             origUrl: url,
         }
-        
+
         const token = JSON.parse(localStorage.getItem("token"));
 
         fetch(`${process.env.REACT_APP_API_URL}/api/short`, {
@@ -57,6 +60,7 @@ function Home() {
             .then(res => {
                 // console.log(res, "res")
                 if (res.status === 200) {
+                    setIsLoading(false);
                     localStorage.setItem("url", JSON.stringify(res.url));
                     setShorteenedUrl(res.url);
                     // navigate('/dashboard');
@@ -70,6 +74,7 @@ function Home() {
                     })
                 } else if (res.status === 429) {
                     // console.log('analytics', res)
+                    setIsLoading(false);
                     toast({
                         title: 'Failed.',
                         description: `${res.error}`,
@@ -78,6 +83,7 @@ function Home() {
                         isClosable: true,
                     })
                 } else {
+                    setIsLoading(false);
                     toast({
                         title: 'Failed.',
                         description: `${res.message}`,
@@ -89,6 +95,7 @@ function Home() {
 
             })
             .catch(error => {
+                setIsLoading(false);
                 toast(error.message);
             });
     }
@@ -105,6 +112,7 @@ function Home() {
     };
 
     const handleDownload = () => {
+        setIsLoading(true);
         fetch(`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${ShorteenedUrl.shortUrl}`)
             .then(response => response.blob())
             .then(blob => {
@@ -120,8 +128,9 @@ function Home() {
                 // Cleanup
                 window.URL.revokeObjectURL(url);
             });
+        setIsLoading(false);
     }
-    
+
     return (
         <Container maxW={'5xl'}>
             <Stack
@@ -142,8 +151,9 @@ function Home() {
                     Brief help make everything short as possible. <br />
                     Brief is a simple tool which makes URLs as short as possible.
                 </Text>
-                <Stack spacing={6} direction={'row'}>
-                    <FormControl id="url">
+                <Box spacing={6} display={{ base: 'grid', md: 'flex' }}>
+                    <FormControl id="url" mr="10px" isRequired>
+                        <FormLabel>Main URL</FormLabel>
                         <Input
                             type="text"
                             name="url"
@@ -156,16 +166,18 @@ function Home() {
                         <FormHelperText>Note: The URL must carry http</FormHelperText>
                     </FormControl>
                     <Button
+                        mt="30px"
                         rounded={'full'}
                         px={6}
                         colorScheme={'green'}
                         bg={'green.400'}
                         _hover={{ bg: 'green.500' }}
                         onClick={handleSubmit}
+                        disabled={isLoading}
                     >
-                        Submit
+                        {isLoading ? <Spinner size="sm" color="white" /> : 'Submit'}
                     </Button>
-                </Stack>
+                </Box>
             </Stack>
 
             <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
@@ -186,10 +198,17 @@ function Home() {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button onClick={handleDownload} colorScheme='blue' mr={3}>
-                            Download QR Code Link
+                        <Button
+                            onClick={handleDownload}
+                            colorScheme='blue'
+                            mr={3}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? <Spinner size="sm" color="white" /> : 'Download QR Code Link'}
                         </Button>
-                        <Button onClick={onClose}>Cancel</Button>
+                        <Button onClick={onClose}>
+                            Cancel
+                        </Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>

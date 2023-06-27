@@ -13,6 +13,7 @@ import {
     Text,
     useColorModeValue,
     useToast,
+    Spinner,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
@@ -28,8 +29,10 @@ function RegisterComponent() {
     const [password, setPassword] = useState("")
     const navigate = useNavigate();
     const toast = useToast();
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleRegister = () => {
+        setIsLoading(true);
         let payload = {
             first_name: firstName,
             last_name: lastName,
@@ -59,6 +62,7 @@ function RegisterComponent() {
                         navigate('/login');
                     }, 5000)
                 } else {
+                    setIsLoading(false);
                     toast({
                         title: 'Registration Failed.',
                         description: `${res.message}`,
@@ -70,8 +74,15 @@ function RegisterComponent() {
 
             })
             .catch(error => {
+                setIsLoading(false);
                 console.log('error', error.message)
-                toast(error.message);
+                toast({
+                    title: 'Registration Failed.',
+                    description: `${error.message}`,
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                })
             });
     }
 
@@ -112,7 +123,7 @@ function RegisterComponent() {
                                     </FormControl>
                                 </Box>
                                 <Box>
-                                    <FormControl id="lastName">
+                                    <FormControl id="lastName" mt={{ base: '20px', md: 'none' }} isRequired>
                                         <FormLabel>Last Name</FormLabel>
                                         <Input
                                             type="text"
@@ -168,9 +179,10 @@ function RegisterComponent() {
                                         _hover={{
                                             bg: 'green.500',
                                         }}
-                                        onClick={handleRegister}
+                                    onClick={handleRegister}
+                                    disabled={isLoading}
                                     >
-                                        Sign up
+                                    {isLoading ? <Spinner size="sm" color="white" /> : 'Sign up'}
                                     </Button>
                                 {/* </Link> */}
                             </Stack>

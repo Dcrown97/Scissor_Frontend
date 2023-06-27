@@ -12,6 +12,7 @@ import {
     useColorModeValue,
     HStack,
     useToast,
+    Spinner,
 } from '@chakra-ui/react';
 import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
@@ -23,8 +24,10 @@ function LoginComponent() {
     const navigate = useNavigate();
     const toast = useToast();
     const { user, setUser } = useContext(UserContext);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleLogin = () => {
+        setIsLoading(true);
         let payload = {
             email,
             password
@@ -47,6 +50,7 @@ function LoginComponent() {
                     setUser(res.user);
                     navigate('/dashboard');
                 } else {
+                    setIsLoading(false);
                     toast({
                         title: 'Login Failed.',
                         description: `${res.message}`,
@@ -85,7 +89,7 @@ function LoginComponent() {
                         boxShadow={'lg'}
                         p={8}>
                         <Stack spacing={4}>
-                            <FormControl id="email">
+                            <FormControl id="email" isRequired>
                                 <FormLabel>Email address</FormLabel>
                                 <Input
                                     type="email"
@@ -96,7 +100,7 @@ function LoginComponent() {
                                     }}
                                 />
                             </FormControl>
-                            <FormControl id="password">
+                            <FormControl id="password" isRequired>
                                 <FormLabel>Password</FormLabel>
                                 <Input
                                     type="password"
@@ -123,8 +127,9 @@ function LoginComponent() {
                                             bg: 'green.500',
                                     }}
                                     onClick={handleLogin}
+                                    disabled={isLoading}
                                     >
-                                        Sign in
+                                    {isLoading ? <Spinner size="sm" color="white" /> : 'Sign in'}
                                     </Button>
                                 {/* </Link> */}
                                 <Stack pt={4}>
