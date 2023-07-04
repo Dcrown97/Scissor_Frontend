@@ -124,7 +124,7 @@ function RegisterComponent() {
                                     </FormControl>
                                 </Box>
                                 <Box>
-                                    <FormControl id="lastName" mt={{ base: '20px', md: 'none' }} isRequired>
+                                    <FormControl id="lastName" mt={{ base: '20px', md: '-0' }} isRequired>
                                         <FormLabel>Last Name</FormLabel>
                                         <Input
                                             type="text"
