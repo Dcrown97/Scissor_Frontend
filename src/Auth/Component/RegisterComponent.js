@@ -30,6 +30,7 @@ function RegisterComponent() {
     const navigate = useNavigate();
     const toast = useToast();
     const [isLoading, setIsLoading] = useState(false);
+    const isFormValid = firstName !== '' && lastName !== '' && email !== '' && password !== '';
 
     const handleRegister = () => {
         setIsLoading(true);
@@ -181,6 +182,7 @@ function RegisterComponent() {
                                         }}
                                     onClick={handleRegister}
                                     disabled={isLoading}
+                                    isDisabled={!isFormValid}
                                     >
                                     {isLoading ? <Spinner size="sm" color="white" /> : 'Sign up'}
                                     </Button>

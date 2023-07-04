@@ -25,6 +25,7 @@ function LoginComponent() {
     const toast = useToast();
     const { user, setUser } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false);
+    const isFormValid = email !== '' && password !== '';
 
     const handleLogin = () => {
         setIsLoading(true);
@@ -110,7 +111,7 @@ function LoginComponent() {
                                         setPassword(target.value)
                                     }}
                                 />
-                            </FormControl>
+                            </FormControl>  
                             <Stack spacing={10}>
                                 <Stack
                                     direction={{ base: 'column', sm: 'row' }}
@@ -128,6 +129,7 @@ function LoginComponent() {
                                     }}
                                     onClick={handleLogin}
                                     disabled={isLoading}
+                                    isDisabled={!isFormValid}
                                     >
                                     {isLoading ? <Spinner size="sm" color="white" /> : 'Sign in'}
                                     </Button>
