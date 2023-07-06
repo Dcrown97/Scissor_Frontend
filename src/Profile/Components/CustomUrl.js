@@ -163,7 +163,7 @@ function CustomUrl() {
                                 setUrl(target.value)
                             }}
                         />
-                        <FormHelperText>Note: The URL must carry http</FormHelperText>
+                        {/* <FormHelperText>Note: The URL must carry http</FormHelperText> */}
                     </FormControl>
                     <FormControl id="url" mr="10px">
                         <FormLabel>Custom URL</FormLabel>

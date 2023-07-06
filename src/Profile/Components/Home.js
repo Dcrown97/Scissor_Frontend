@@ -163,7 +163,7 @@ function Home() {
                                 setUrl(target.value)
                             }}
                         />
-                        <FormHelperText>Note: The URL must carry http</FormHelperText>
+                        {/* <FormHelperText>Note: The URL must carry http</FormHelperText> */}
                     </FormControl>
                     <Button
                         mt="30px"
